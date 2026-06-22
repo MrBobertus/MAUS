@@ -3,7 +3,6 @@
 </p>
 
 # MAUS | Mouse Automated Utility Software
-V1.1
 
 > A lightweight, fast autoclicker for Windows. Built by [MRB Labs](https://github.com/MrBobertus)
 
