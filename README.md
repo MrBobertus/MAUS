@@ -1,4 +1,4 @@
-# MAUS — Mouse Automated Utility Software
+# MAUS | Mouse Automated Utility Software
 
 > A lightweight, fast autoclicker for Windows. Built by [MRB Labs](https://github.com/MrBobertus)
 
