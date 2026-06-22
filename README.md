@@ -1,3 +1,8 @@
+<p align="center">
+  <img width="1920" height="1920" alt="maus icon" src="https://github.com/user-attachments/assets/79d2a23f-c941-49be-a478-1e7b894f1de1" />
+</p>
+
+
 # MAUS | Mouse Automated Utility Software
 
 > A lightweight, fast autoclicker for Windows. Built by [MRB Labs](https://github.com/MrBobertus)
@@ -8,12 +13,12 @@
 
 ## Features
 
-- **Adjustable click interval** — set hours, minutes, seconds, and milliseconds
-- **Mouse button selection** — left, middle, or right click
-- **Click type** — single or double click
-- **Custom hotkey** — bind any key to toggle the autoclicker on/off
-- **Emergency stop** — press `F6` at any time to immediately stop clicking
-- **Lightweight** — under 1 MB, no installation required
+- **Adjustable click interval** - set hours, minutes, seconds, and milliseconds
+- **Mouse button selection** - left, middle, or right click
+- **Click type** - single or double click
+- **Custom hotkey** - bind any key to toggle the autoclicker on/off
+- **Emergency stop** - press `F6` at any time to immediately stop clicking
+- **Lightweight** - under 1 MB, no installation required
 
 ---
 
