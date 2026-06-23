@@ -49,4 +49,7 @@ Just download and run. No installer needed.
 
 ## Built by
 
-**MRB Labs** — [github.com/MrBobertus](https://github.com/MrBobertus)
+**MRB Labs** - [github.com/MrBobertus](https://github.com/MrBobertus)
+
+<img width="1138" height="188" alt="mrblabs-banner" src="https://github.com/user-attachments/assets/3fed92ea-8b82-4464-a817-db6e1db8070f" />
+
