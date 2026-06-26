@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Interop;
+using System.Windows.Controls;
 
 
 namespace maus
@@ -21,8 +22,10 @@ namespace maus
         private const int HOTKEY_ID = 1;
         private const int EMERGENCY_HOTKEY_ID = 2;
         private const int WM_HOTKEY = 0x0312;
-        private const string APP_VERSION = "v1.2";
+        private const string APP_VERSION = "v1.3.0";
         private int repeatUntil = -1;
+        private bool waitingForKey = false;
+        private Key selectedActionKey = Key.E;
 
 
         // =========================
@@ -182,12 +185,60 @@ namespace maus
             }
         }
 
-        // unused keypboard simulation for future feature
-        // private void SimulateKey_Press()
-        // {
-        //     keybd_event(0x41, 0, 0, 0);
-        //     keybd_event(0x41, 0, 2, 0);
-        // }
+        private void SimulateKeyboard_Press()
+        {
+            byte vk = (byte)KeyInterop.VirtualKeyFromKey(selectedActionKey);
+
+            keybd_event(vk, 0, 0, 0);
+            keybd_event(vk, 0, 2, 0);
+        }
+
+        private void ActionKeyBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            waitingForKey = true;
+            ActionKeyBox.Text = "Press a key...";
+            Keyboard.Focus(ActionKeyBox);
+
+            e.Handled = true;
+        }
+
+        private void ActionKeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (!waitingForKey)
+                return;
+
+            if (e.Key == Key.LeftShift ||
+                e.Key == Key.RightShift ||
+                e.Key == Key.LeftCtrl ||
+                e.Key == Key.RightCtrl ||
+                e.Key == Key.LeftAlt ||
+                e.Key == Key.RightAlt)
+            {
+                return;
+            }
+
+            selectedActionKey = e.Key;
+            ActionKeyBox.Text = selectedActionKey.ToString();
+
+            waitingForKey = false;
+
+            e.Handled = true;
+        }
+
+        private void ActionTypeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MousePanel == null || KeyboardPanel == null) return;
+
+            bool keyboard = ActionTypeBox.SelectedIndex == 1;
+
+            MousePanel.Visibility = keyboard
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+
+            KeyboardPanel.Visibility = keyboard
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
 
         private void IntervalBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -196,21 +247,16 @@ namespace maus
 
         private void Start_Clicker()
         {
-            if (!isRunning) 
+            if (!isRunning)
             {
                 StatusText.Text = "Status: On";
 
-                int hours = 0;
-                int minutes = 0;
-                int seconds = 0;
-                int milliseconds = 0;
-
+                int hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
 
                 int.TryParse(HoursIntervalBox.Text, out hours);
                 int.TryParse(MinutesIntervalBox.Text, out minutes);
                 int.TryParse(SecondsIntervalBox.Text, out seconds);
                 int.TryParse(MillisecondsIntervalBox.Text, out milliseconds);
-
 
                 int interval =
                     (hours * 60 * 60 * 1000)
@@ -218,18 +264,18 @@ namespace maus
                     + (seconds * 1000)
                     + milliseconds;
 
-                if (interval < 1)
-                {
-                    interval = 1;
-                }
+                if (interval < 1) interval = 1;
 
                 repeatUntil = int.Parse(RepeatCountBox.Text);
+
+                int actionType = ActionTypeBox.SelectedIndex;
 
                 clickTimer = new System.Threading.Timer(_ =>
                 {
                     if (repeatUntil > 0)
                     {
-                        SimulateMouse_Click();
+                        if (actionType == 0) SimulateMouse_Click();
+                        else SimulateKeyboard_Press();
                         repeatUntil--;
                     }
                     else if (repeatUntil == 0)
@@ -238,7 +284,8 @@ namespace maus
                     }
                     else
                     {
-                        SimulateMouse_Click();
+                        if (actionType == 0) SimulateMouse_Click();
+                        else SimulateKeyboard_Press();
                     }
                 }, null, 0, interval);
 
